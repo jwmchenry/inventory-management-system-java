@@ -20,7 +20,7 @@ public class ModifyProducts implements Initializable {
 
     @FXML
     void onActionAddProduct(ActionEvent event) {
-
+        System.out.println("Testing");
     }
 
     @FXML
