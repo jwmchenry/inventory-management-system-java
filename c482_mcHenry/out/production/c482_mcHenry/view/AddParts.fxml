@@ -23,11 +23,11 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <RadioButton mnemonicParsing="false" selected="true" text="In-House">
+            <RadioButton fx:id="inHouseRBtn" mnemonicParsing="false" onAction="#onActionInHouse" selected="true" text="In-House">
                <toggleGroup>
                   <ToggleGroup fx:id="tglAddPart" />
                </toggleGroup></RadioButton>
-            <RadioButton mnemonicParsing="false" text="Outsourced" toggleGroup="$tglAddPart" />
+            <RadioButton fx:id="outsourcedRBtn" mnemonicParsing="false" onAction="#onActionOutsourced" text="Outsourced" toggleGroup="$tglAddPart" />
          </children>
       </HBox>
       <VBox layoutX="93.0" layoutY="100.0" prefHeight="200.0" prefWidth="414.0">
@@ -53,19 +53,19 @@
                   <Label text="Inv" GridPane.rowIndex="2" />
                   <Label text="Price/Cost" GridPane.rowIndex="3" />
                   <Label text="Max" GridPane.rowIndex="4" />
-                  <Label text="Machine ID" GridPane.rowIndex="5" />
+                  <Label fx:id="lblIdCompanyName" text="Machine ID" GridPane.rowIndex="5" />
                   <Label text="Min" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-                  <TextField disable="true" promptText="Auto Gen - Disabled" GridPane.columnIndex="1">
+                  <TextField fx:id="idText" disable="true" promptText="Auto Gen - Disabled" GridPane.columnIndex="1">
                      <font>
                         <Font name="System Italic" size="12.0" />
                      </font>
                   </TextField>
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <TextField GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                  <TextField fx:id="nameTxt" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="invTxt" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="pricePerCostTxt" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="maxTxt" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="machineIdCompanyNameTxt" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextField fx:id="minTxt" GridPane.columnIndex="3" GridPane.rowIndex="4" />
                </children>
                <VBox.margin>
                   <Insets />

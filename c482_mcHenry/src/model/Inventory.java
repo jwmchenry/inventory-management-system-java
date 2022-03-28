@@ -9,11 +9,11 @@ public class Inventory {
     private static ObservableList<Product> allProducts = FXCollections.observableArrayList();
 
     public static void addPart(Part newPart) {
-
+        allParts.add(newPart);
     }
 
     public static void addProduct(Product newProduct) {
-
+        allProducts.add(newProduct);
     }
 
     public static Part lookupPart(int partId) {
@@ -56,12 +56,12 @@ public class Inventory {
 
     public static ObservableList<Part> getAllParts() {
 
-        return null;
+        return allParts;
     }
 
     public static ObservableList<Product> getAllProducts() {
 
-        return null;
+        return allProducts;
     }
 
 }

@@ -82,7 +82,6 @@ public class Product {
             if (associatedParts.get(i).getId() == selectedAssociatedPart.getId()) {
                 associatedParts.remove(i);
                 wasDeleted = true;
-
             }
         }
 

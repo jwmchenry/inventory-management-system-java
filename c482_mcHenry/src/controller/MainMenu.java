@@ -7,7 +7,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import model.Inventory;
+import model.Part;
+import model.Product;
 
 import java.io.IOException;
 import java.net.URL;
@@ -17,6 +23,36 @@ public class MainMenu implements Initializable {
 
     Stage stage;
     Parent scene;
+
+    @FXML
+    private TableColumn<Part, Double> partCostPerUnitCol;
+
+    @FXML
+    private TableColumn<Part, Integer> partInvLevelCol;
+
+    @FXML
+    private TableColumn<Part, Integer> partIdCol;
+
+    @FXML
+    private TableColumn<Part, String> partNameCol;
+
+    @FXML
+    private TableView<Part> partsTableView;
+
+    @FXML
+    private TableColumn<Product, Double> prodCostPerUnitCol;
+
+    @FXML
+    private TableColumn<Product, Integer> prodIdCol;
+
+    @FXML
+    private TableColumn<Product, Integer> prodInvLevelCol;
+
+    @FXML
+    private TableColumn<Product, String> prodNameCol;
+
+    @FXML
+    private TableView<Product> productsTableView;
 
     @FXML
     void onActionAddParts(ActionEvent event) throws IOException {
@@ -76,6 +112,19 @@ public class MainMenu implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        partsTableView.setItems(Inventory.getAllParts());
+        productsTableView.setItems(Inventory.getAllProducts());
+
+        partIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        partNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        partInvLevelCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        partCostPerUnitCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+
+        prodIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        prodNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        prodInvLevelCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        prodCostPerUnitCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
     }
 }
