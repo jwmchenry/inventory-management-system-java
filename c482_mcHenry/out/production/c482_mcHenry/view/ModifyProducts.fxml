@@ -39,7 +39,7 @@
                               <Label text="Name" GridPane.rowIndex="1" />
                               <Label text="Inv" GridPane.rowIndex="2" />
                               <Label text="Price" GridPane.rowIndex="3" />
-                              <TextField disable="true" GridPane.columnIndex="1" />
+                              <TextField disable="true" editable="false" GridPane.columnIndex="1" />
                               <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <TextField maxWidth="85.0" prefWidth="85.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                               <TextField maxWidth="85.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
