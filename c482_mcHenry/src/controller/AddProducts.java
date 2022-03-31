@@ -19,7 +19,7 @@ public class AddProducts implements Initializable {
     Parent scene;
 
     @FXML
-    void onActionAddProduct(ActionEvent event) {
+    void onActionAddAssociatedPart(ActionEvent event) {
 
     }
 

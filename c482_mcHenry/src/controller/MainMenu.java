@@ -1,5 +1,7 @@
 package controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,12 +11,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import main.Main;
 import model.Inventory;
 import model.Part;
 import model.Product;
 
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -53,6 +58,12 @@ public class MainMenu implements Initializable {
 
     @FXML
     private TableView<Product> productsTableView;
+
+    @FXML
+    private TextField searchPartsTxt;
+
+    @FXML
+    private TextField searchProductsTxt;
 
     @FXML
     void onActionAddParts(ActionEvent event) throws IOException {
@@ -110,6 +121,44 @@ public class MainMenu implements Initializable {
         System.exit(0);
     }
 
+
+    //This is a button click event for searching, it takes the text field and checks if the entered string can be
+    //converted to an integer. If so, it does that and searches by partID. If blank, shows whole list. If string,
+    //searches by part name.
+    @FXML
+    void onActionSearchParts(ActionEvent event) {
+        String text = searchPartsTxt.getText();
+        if (Main.isInteger(text)) {
+            int partID = Integer.parseInt(text);
+            ObservableList<Part> filteredParts = FXCollections.observableArrayList();
+            filteredParts.add(Inventory.lookupPart(partID));
+            partsTableView.setItems(filteredParts);
+        } else if (text.isEmpty()) {
+            partsTableView.setItems(Inventory.getAllParts());
+        } else if (!Main.isInteger(text)) {
+            partsTableView.setItems(Inventory.lookupPart(text));
+        } else {
+            System.out.println("Error.");
+        }
+    }
+
+    @FXML
+    void onActionSearchProducts(ActionEvent event) {
+        String text = searchProductsTxt.getText();
+        if (Main.isInteger(text)) {
+            int productID = Integer.parseInt(text);
+            ObservableList<Product> filteredProducts = FXCollections.observableArrayList();
+            filteredProducts.add(Inventory.lookupProduct(productID));
+            productsTableView.setItems(filteredProducts);
+        } else if (text.isEmpty()) {
+            productsTableView.setItems(Inventory.getAllProducts());
+        } else if (!Main.isInteger(text)) {
+            productsTableView.setItems(Inventory.lookupProduct(text));
+        } else {
+            System.out.println("Error.");
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -127,4 +176,6 @@ public class MainMenu implements Initializable {
         prodCostPerUnitCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
     }
+
+
 }

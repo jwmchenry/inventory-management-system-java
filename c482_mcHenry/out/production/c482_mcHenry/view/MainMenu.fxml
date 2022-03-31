@@ -30,7 +30,7 @@
                   <Button mnemonicParsing="false" onAction="#onActionDeleteParts" prefHeight="27.0" text="Delete" />
                </children>
             </HBox>
-            <TextField layoutX="281.0" layoutY="85.0" promptText="Search by Part ID or Name" />
+            <TextField fx:id="searchPartsTxt" layoutX="230.0" layoutY="86.0" promptText="Search by Part ID or Name" />
             <Text layoutX="70.0" layoutY="103.0" stroke="#1b1a1a" strokeType="OUTSIDE" strokeWidth="0.3" text="Parts">
                <font>
                   <Font size="14.0" />
@@ -41,6 +41,7 @@
                   <Font size="16.0" />
                </font>
             </Text>
+            <Button layoutX="378.0" layoutY="86.0" mnemonicParsing="false" onAction="#onActionSearchParts" text="Search" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="500.0" prefHeight="400.0" prefWidth="500.0">
@@ -61,13 +62,14 @@
                   <Button mnemonicParsing="false" onAction="#onActionDeleteProducts" prefHeight="27.0" text="Delete" />
                </children>
             </HBox>
-            <TextField layoutX="281.0" layoutY="85.0" promptText="Search by Product ID or Name" />
+            <TextField fx:id="searchProductsTxt" layoutX="230.0" layoutY="85.0" promptText="Search by Product ID or Name" />
             <Text layoutX="70.0" layoutY="103.0" stroke="#1b1a1a" strokeType="OUTSIDE" strokeWidth="0.3" text="Products">
                <font>
                   <Font size="14.0" />
                </font>
             </Text>
             <Button layoutX="404.0" layoutY="353.0" mnemonicParsing="false" onAction="#onActionExit" prefWidth="40.0" text="Exit" />
+            <Button layoutX="378.0" layoutY="85.0" mnemonicParsing="false" onAction="#onActionSearchProducts" text="Search" />
          </children>
       </AnchorPane>
    </children>

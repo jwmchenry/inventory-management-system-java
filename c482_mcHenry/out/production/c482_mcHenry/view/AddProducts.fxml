@@ -83,7 +83,7 @@
                         <TableColumn prefWidth="138.0" text="Price/Cost per Unit" />
                      </columns>
                   </TableView>
-                  <Button layoutX="344.0" layoutY="245.0" mnemonicParsing="false" onAction="#onActionAddProduct" text="Add" />
+                  <Button layoutX="344.0" layoutY="245.0" mnemonicParsing="false" onAction="#onActionAddAssociatedPart" text="Add" />
                   <Button layoutX="388.0" layoutY="537.0" mnemonicParsing="false" onAction="#onActionCancel" text="Cancel" />
                   <Button layoutX="303.0" layoutY="537.0" mnemonicParsing="false" onAction="#onActionSave" text="Save" />
                   <Button layoutX="303.0" layoutY="504.0" mnemonicParsing="false" onAction="#onActionRemoveAssociatedPart" text="Remove Associated Part" />
