@@ -19,7 +19,7 @@ public class Inventory {
     }
 
     public static Part lookupPart(int partId) {
-        for (Part part : Inventory.getAllParts()) {
+        for (Part part : getAllParts()) {
             if (part.getId() == partId) {
                 return part;
             }
@@ -29,7 +29,7 @@ public class Inventory {
 
     public static Product lookupProduct(int productId) {
 
-        for (Product product : Inventory.getAllProducts()) {
+        for (Product product : getAllProducts()) {
             if (product.getId() == productId) {
                 return product;
             }
@@ -39,7 +39,7 @@ public class Inventory {
 
     public static ObservableList<Part> lookupPart(String partName) {
         filteredParts.clear();
-        for (Part part : Inventory.getAllParts()) {
+        for (Part part : getAllParts()) {
             if (part.getName().contains(partName)) {
                 filteredParts.add(part);
             }
@@ -49,7 +49,7 @@ public class Inventory {
 
     public static ObservableList<Product> lookupProduct(String productName) {
         filteredProducts.clear();
-        for (Product product : Inventory.getAllProducts()) {
+        for (Product product : getAllProducts()) {
             if (product.getName().contains(productName)) {
                 filteredProducts.add(product);
             }
@@ -58,20 +58,30 @@ public class Inventory {
     }
 
     public static void updatePart(int index, Part selectedPart) {
-
+        allParts.set(index, selectedPart);
     }
 
     public static void updateProduct(int index, Product newProduct) {
-
+        allProducts.set(index, newProduct);
     }
 
     public static boolean deletePart(Part selectedPart) {
-
+        for (Part part : getAllParts()) {
+            if (part.getId() == selectedPart.getId()) {
+                getAllParts().remove(part);
+                return true;
+            }
+        }
         return false;
     }
 
     public static boolean deleteProduct(Product selectedProduct) {
-
+        for (Product product : getAllProducts()) {
+            if (product.getId() == selectedProduct.getId()) {
+                getAllProducts().remove(product);
+                return true;
+            }
+        }
         return false;
     }
 

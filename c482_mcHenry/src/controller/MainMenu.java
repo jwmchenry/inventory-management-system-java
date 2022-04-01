@@ -98,8 +98,16 @@ public class MainMenu implements Initializable {
     @FXML
     void onActionModifyParts(ActionEvent event) throws IOException {
 
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/view/ModifyParts.fxml"));
+        loader.load();
+
+        ModifyParts MPController = loader.getController();
+
+        MPController.sendPart(partsTableView.getSelectionModel().getSelectedItem());
+
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/view/ModifyParts.fxml"));
+        scene = loader.getRoot();
         stage.setScene(new Scene(scene));
         stage.show();
 
@@ -122,12 +130,12 @@ public class MainMenu implements Initializable {
     }
 
 
-    //This is a button click event for searching, it takes the text field and checks if the entered string can be
-    //converted to an integer. If so, it does that and searches by partID. If blank, shows whole list. If string,
-    //searches by part name.
+    //search function by part ID or part name
     @FXML
     void onActionSearchParts(ActionEvent event) {
+
         String text = searchPartsTxt.getText();
+
         if (Main.isInteger(text)) {
             int partID = Integer.parseInt(text);
             ObservableList<Part> filteredParts = FXCollections.observableArrayList();
@@ -142,9 +150,12 @@ public class MainMenu implements Initializable {
         }
     }
 
+    //search function for products by ID or name
     @FXML
     void onActionSearchProducts(ActionEvent event) {
+
         String text = searchProductsTxt.getText();
+
         if (Main.isInteger(text)) {
             int productID = Integer.parseInt(text);
             ObservableList<Product> filteredProducts = FXCollections.observableArrayList();
