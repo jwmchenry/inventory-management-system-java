@@ -1,0 +1,185 @@
+package controller;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+import model.Inventory;
+import model.Part;
+import model.Product;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
+public class ModifyProductsController implements Initializable {
+
+    Stage stage;
+    Parent scene;
+    public static ObservableList<Part> tempAssocParts = FXCollections.observableArrayList();
+
+    @FXML
+    private TableColumn<Part, Integer> allPartIdCol;
+
+    @FXML
+    private TableColumn<Part, Integer> allPartsInvCol;
+
+    @FXML
+    private TableColumn<Part, String> allPartNameCol;
+
+    @FXML
+    private TableColumn<Part, Double> allPartsPriceCol;
+
+    @FXML
+    private TableView<Part> allPartsTableView;
+
+    @FXML
+    private TableColumn<Part, Integer> assocPartIdCol;
+
+    @FXML
+    private TableColumn<Part, Integer> assocPartInvCol;
+
+    @FXML
+    private TableColumn<Part, String> assocPartNameCol;
+
+    @FXML
+    private TableColumn<Part, Double> assocPartPriceCol;
+
+    @FXML
+    private TableView<Part> assocPartsTableView;
+
+    @FXML
+    private TextField idTxt;
+
+    @FXML
+    private TextField invTxt;
+
+    @FXML
+    private TextField maxTxt;
+
+    @FXML
+    private TextField minTxt;
+
+    @FXML
+    private TextField nameTxt;
+
+    @FXML
+    private TextField priceTxt;
+
+    @FXML
+    void onActionAddPart(ActionEvent event) {
+        boolean partAdded = false;
+
+        for (Part part : tempAssocParts) {
+            if (part.getId() == allPartsTableView.getSelectionModel().getSelectedItem().getId()) {
+                partAdded = true;
+            }
+        }
+
+        if (!partAdded) {
+            tempAssocParts.add(allPartsTableView.getSelectionModel().getSelectedItem());
+        }
+
+        assocPartsTableView.setItems(tempAssocParts);
+    }
+
+
+
+
+    @FXML
+    void onActionCancel(ActionEvent event) throws IOException {
+
+        stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
+        scene = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/MainMenu.fxml")));
+        stage.setScene(new Scene(scene));
+        stage.show();
+
+    }
+
+    @FXML
+    void onActionRemoveAssociatedPart(ActionEvent event) {
+
+        if (assocPartsTableView.getSelectionModel().isEmpty()) {
+            return;
+        }
+
+        ObservableList<Part> cloneTempAssocParts = FXCollections.observableArrayList();
+        cloneTempAssocParts.addAll(tempAssocParts);
+
+        for (Part part : cloneTempAssocParts) {
+            if (part.getId() == assocPartsTableView.getSelectionModel().getSelectedItem().getId()) {
+                tempAssocParts.remove(part);
+                break;
+            }
+        }
+
+        assocPartsTableView.setItems(tempAssocParts);
+    }
+
+    @FXML
+    void onActionSave(ActionEvent event) throws IOException {
+
+        int id = Integer.parseInt(idTxt.getText());
+        String name = nameTxt.getText();
+        double price = Double.parseDouble(priceTxt.getText());
+        int stock = Integer.parseInt(invTxt.getText());
+        int max = Integer.parseInt(maxTxt.getText());
+        int min = Integer.parseInt(minTxt.getText());
+
+        int updateIndex = -1;
+        for (int i = 0; i < Inventory.getAllProducts().size(); i++) {
+            if (id == Inventory.getAllProducts().get(i).getId()) {
+                updateIndex = i;
+            }
+        }
+
+        Inventory.updateProduct(updateIndex, new Product(id, name, price, stock, max, min));
+
+        for (Part part : tempAssocParts) {
+            Inventory.getAllProducts().get(updateIndex).addAssociatedPart(part);
+        }
+
+        stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
+        scene = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/MainMenu.fxml")));
+        stage.setScene(new Scene(scene));
+        stage.show();
+    }
+
+    public void sendProduct(Product product) {
+        idTxt.setText(String.valueOf(product.getId()));
+        nameTxt.setText(product.getName());
+        invTxt.setText(String.valueOf(product.getStock()));
+        priceTxt.setText(String.valueOf(product.getPrice()));
+        maxTxt.setText(String.valueOf(product.getMax()));
+        minTxt.setText(String.valueOf(product.getMin()));
+
+        assocPartsTableView.setItems(product.getAllAssociatedParts());
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        allPartsTableView.setItems(Inventory.getAllParts());
+
+        allPartIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        allPartNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        allPartsInvCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        allPartsPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+
+        assocPartIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        assocPartNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        assocPartInvCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        assocPartPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+    }
+}

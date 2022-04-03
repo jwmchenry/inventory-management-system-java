@@ -71,7 +71,7 @@ public class Product {
     }
 
     public void addAssociatedPart(Part part) {
-
+        associatedParts.add(part);
     }
 
     public boolean deleteAssociatedPart(Part selectedAssociatedPart) {

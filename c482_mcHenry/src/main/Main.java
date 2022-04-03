@@ -25,12 +25,12 @@ public class Main extends Application {
 
     public static void main(String[] args) {
 
-        InHouse part1 = new InHouse(1,"wrench", 99.99, 3, 0, 5, 1);
-        InHouse part2 = new InHouse(2,"spanner", 299.99, 4, 0, 5, 1);
-        InHouse part3 = new InHouse(3,"corkscrew", 19.99, 5, 0, 5, 1);
-        InHouse part4 = new InHouse(4,"testitem", 39.99, 123, 0, 5, 1);
-        InHouse part5 = new InHouse(5,"kit", 20.99, 45, 0, 5, 1);
-        Product product1 = new Product(1, "vacuum", 299.99, 7, 0, 10);
+        InHouse part1 = new InHouse(321,"wrench", 99.99, 3, 0, 5, 1);
+        InHouse part2 = new InHouse(322,"spanner", 299.99, 4, 0, 5, 1);
+        InHouse part3 = new InHouse(333,"corkscrew", 19.99, 5, 0, 5, 1);
+        InHouse part4 = new InHouse(344,"testitem", 39.99, 123, 0, 5, 1);
+        InHouse part5 = new InHouse(355,"kit", 20.99, 45, 0, 5, 1);
+        Product product1 = new Product(565757, "vacuum", 299.99, 7, 0, 10);
 
         Inventory.addPart(part1);
         Inventory.addPart(part2);
