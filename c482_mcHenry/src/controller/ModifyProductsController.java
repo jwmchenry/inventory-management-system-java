@@ -14,12 +14,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import main.Main;
 import model.Inventory;
 import model.Part;
 import model.Product;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ListIterator;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -28,6 +30,7 @@ public class ModifyProductsController implements Initializable {
     Stage stage;
     Parent scene;
     public static ObservableList<Part> tempAssocParts = FXCollections.observableArrayList();
+    private ObservableList<Part> filteredParts = FXCollections.observableArrayList();
 
     @FXML
     private TableColumn<Part, Integer> allPartIdCol;
@@ -78,6 +81,9 @@ public class ModifyProductsController implements Initializable {
     private TextField priceTxt;
 
     @FXML
+    private TextField searchPartsTxt;
+
+    @FXML
     void onActionAddPart(ActionEvent event) {
         boolean partAdded = false;
 
@@ -87,7 +93,7 @@ public class ModifyProductsController implements Initializable {
             }
         }
 
-        if (!partAdded) {
+        if (!partAdded && !allPartsTableView.getSelectionModel().isEmpty()) {
             tempAssocParts.add(allPartsTableView.getSelectionModel().getSelectedItem());
         }
 
@@ -114,15 +120,8 @@ public class ModifyProductsController implements Initializable {
             return;
         }
 
-        ObservableList<Part> cloneTempAssocParts = FXCollections.observableArrayList();
-        cloneTempAssocParts.addAll(tempAssocParts);
-
-        for (Part part : cloneTempAssocParts) {
-            if (part.getId() == assocPartsTableView.getSelectionModel().getSelectedItem().getId()) {
-                tempAssocParts.remove(part);
-                break;
-            }
-        }
+        tempAssocParts.removeIf(part -> part.getId() ==
+                assocPartsTableView.getSelectionModel().getSelectedItem().getId());
 
         assocPartsTableView.setItems(tempAssocParts);
     }
@@ -154,6 +153,26 @@ public class ModifyProductsController implements Initializable {
         scene = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/MainMenu.fxml")));
         stage.setScene(new Scene(scene));
         stage.show();
+    }
+
+    @FXML
+    void onActionSearchParts(ActionEvent event) {
+
+        String text = searchPartsTxt.getText();
+
+        if (Main.isInteger(text)) {
+            int partID = Integer.parseInt(text);
+            filteredParts.clear();
+            filteredParts.add(Inventory.lookupPart(partID));
+            allPartsTableView.setItems(filteredParts);
+        } else if (text.isEmpty()) {
+            allPartsTableView.setItems(Inventory.getAllParts());
+        } else if (!Main.isInteger(text)) {
+            allPartsTableView.setItems(Inventory.lookupPart(text));
+        } else {
+            System.out.println("Error.");
+        }
+
     }
 
     public void sendProduct(Product product) {

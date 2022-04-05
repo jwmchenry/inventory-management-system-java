@@ -21,6 +21,7 @@ import model.Product;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class AddProductsController implements Initializable {
@@ -28,6 +29,7 @@ public class AddProductsController implements Initializable {
     Stage stage;
     Parent scene;
     private static ObservableList<Part> tempAssocParts = FXCollections.observableArrayList();
+    private ObservableList<Part> filteredParts = FXCollections.observableArrayList();
 
     @FXML
     private TableColumn<Part, Integer> allPartIdCol;
@@ -78,6 +80,9 @@ public class AddProductsController implements Initializable {
     private TextField priceTxt;
 
     @FXML
+    private TextField searchPartsTxt;
+
+    @FXML
     void onActionAddAssociatedPart(ActionEvent event) {
         boolean partAdded = false;
 
@@ -87,7 +92,7 @@ public class AddProductsController implements Initializable {
             }
         }
 
-        if (!partAdded) {
+        if (!partAdded && !allPartsTableView.getSelectionModel().isEmpty()) {
             tempAssocParts.add(allPartsTableView.getSelectionModel().getSelectedItem());
         }
 
@@ -99,7 +104,7 @@ public class AddProductsController implements Initializable {
     void onActionCancel(ActionEvent event) throws IOException {
 
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/view/MainMenu.fxml"));
+        scene = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/MainMenu.fxml")));
         stage.setScene(new Scene(scene));
         stage.show();
 
@@ -114,15 +119,12 @@ public class AddProductsController implements Initializable {
     @FXML
     void onActionRemoveAssociatedPart(ActionEvent event) {
 
-        ObservableList<Part> cloneTempAssocParts = FXCollections.observableArrayList();
-        cloneTempAssocParts.addAll(tempAssocParts);
-
-        for (Part part : cloneTempAssocParts) {
-            if (part.getId() == associatedPartsTableView.getSelectionModel().getSelectedItem().getId()) {
-                tempAssocParts.remove(part);
-                break;
-            }
+        if (associatedPartsTableView.getSelectionModel().isEmpty()) {
+            return;
         }
+
+        tempAssocParts.removeIf(part -> part.getId() ==
+                associatedPartsTableView.getSelectionModel().getSelectedItem().getId());
 
         associatedPartsTableView.setItems(tempAssocParts);
     }
@@ -143,17 +145,34 @@ public class AddProductsController implements Initializable {
 
         for (Product product : Inventory.getAllProducts()) {
             if (product.getId() == id) {
-                for (Part part : tempAssocParts) {
-                    product.addAssociatedPart(part);
-                }
+                product.getAllAssociatedParts().addAll(tempAssocParts);
             }
         }
 
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/view/MainMenu.fxml"));
+        scene = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/MainMenu.fxml")));
         stage.setScene(new Scene(scene));
         stage.show();
 
+    }
+
+    @FXML
+    void onActionSearchParts(ActionEvent event) {
+
+        String text = searchPartsTxt.getText();
+
+        if (Main.isInteger(text)) {
+            int partID = Integer.parseInt(text);
+            filteredParts.clear();
+            filteredParts.add(Inventory.lookupPart(partID));
+            allPartsTableView.setItems(filteredParts);
+        } else if (text.isEmpty()) {
+            allPartsTableView.setItems(Inventory.getAllParts());
+        } else if (!Main.isInteger(text)) {
+            allPartsTableView.setItems(Inventory.lookupPart(text));
+        } else {
+            System.out.println("Error.");
+        }
     }
 
     @Override

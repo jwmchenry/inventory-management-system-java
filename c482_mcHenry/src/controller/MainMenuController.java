@@ -28,6 +28,9 @@ public class MainMenuController implements Initializable {
     Stage stage;
     Parent scene;
 
+    private ObservableList<Part> filteredParts = FXCollections.observableArrayList();
+    private ObservableList<Product> filteredProducts = FXCollections.observableArrayList();
+
     @FXML
     private TableColumn<Part, Double> partCostPerUnitCol;
 
@@ -86,23 +89,32 @@ public class MainMenuController implements Initializable {
 
     @FXML
     void onActionDeleteParts(ActionEvent event) {
-
+        if (!partsTableView.getSelectionModel().isEmpty()) {
+            Inventory.getAllParts().remove(partsTableView.getSelectionModel().getSelectedItem());
+            partsTableView.setItems(Inventory.getAllParts());
+        }
     }
 
     @FXML
     void onActionDeleteProducts(ActionEvent event) {
-
+        if (!productsTableView.getSelectionModel().isEmpty()) {
+            Inventory.getAllProducts().remove(productsTableView.getSelectionModel().getSelectedItem());
+            productsTableView.setItems(Inventory.getAllProducts());
+        }
     }
 
     @FXML
     void onActionModifyParts(ActionEvent event) throws IOException {
+
+        if (partsTableView.getSelectionModel().isEmpty()) {
+            return;
+        }
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/view/ModifyParts.fxml"));
         loader.load();
 
         ModifyPartsController MPController = loader.getController();
-
         MPController.sendPart(partsTableView.getSelectionModel().getSelectedItem());
 
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
@@ -115,6 +127,10 @@ public class MainMenuController implements Initializable {
 
     @FXML
     void onActionModifyProducts(ActionEvent event) throws IOException {
+
+        if (productsTableView.getSelectionModel().isEmpty()) {
+            return;
+        }
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/view/ModifyProducts.fxml"));
@@ -148,7 +164,7 @@ public class MainMenuController implements Initializable {
 
         if (Main.isInteger(text)) {
             int partID = Integer.parseInt(text);
-            ObservableList<Part> filteredParts = FXCollections.observableArrayList();
+            filteredParts.clear();
             filteredParts.add(Inventory.lookupPart(partID));
             partsTableView.setItems(filteredParts);
         } else if (text.isEmpty()) {
@@ -168,7 +184,7 @@ public class MainMenuController implements Initializable {
 
         if (Main.isInteger(text)) {
             int productID = Integer.parseInt(text);
-            ObservableList<Product> filteredProducts = FXCollections.observableArrayList();
+            filteredProducts.clear();
             filteredProducts.add(Inventory.lookupProduct(productID));
             productsTableView.setItems(filteredProducts);
         } else if (text.isEmpty()) {

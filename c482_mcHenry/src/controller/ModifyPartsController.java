@@ -12,10 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import model.InHouse;
-import model.Inventory;
-import model.Outsourced;
-import model.Part;
+import model.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,19 +25,16 @@ public class ModifyPartsController implements Initializable {
     Parent scene;
 
     @FXML
-    private TextField idText;
+    private TextField idTxt;
 
     @FXML
     private RadioButton inHouseRBtn;
 
     @FXML
-    private TextField invText;
+    private TextField invTxt;
 
     @FXML
     private Label lblIDCompanyName;
-
-    @FXML
-    private Label lblMainParts;
 
     @FXML
     private TextField machineIDCompanyNameTxt;
@@ -64,7 +58,7 @@ public class ModifyPartsController implements Initializable {
     void onActionCancel(ActionEvent event) throws IOException {
 
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/view/MainMenu.fxml"));
+        scene = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/MainMenu.fxml")));
         stage.setScene(new Scene(scene));
         stage.show();
 
@@ -75,9 +69,9 @@ public class ModifyPartsController implements Initializable {
 
         ObservableList<Part> partList = Inventory.getAllParts();
 
-        int id = Integer.parseInt(idText.getText());
+        int id = Integer.parseInt(idTxt.getText());
         String name = nameTxt.getText();
-        int stock = Integer.parseInt(invText.getText());
+        int stock = Integer.parseInt(invTxt.getText());
         double price = Double.parseDouble(priceCostTxt.getText());
         int min = Integer.parseInt(minTxt.getText());
         int max = Integer.parseInt(maxTxt.getText());
@@ -92,9 +86,27 @@ public class ModifyPartsController implements Initializable {
         if (inHouseRBtn.isSelected()) {
             int machineId = Integer.parseInt(machineIDCompanyNameTxt.getText());
             Inventory.updatePart(updateIndex, new InHouse( id,  name,  price,  stock,  min,  max,  machineId));
+            for (Product product : Inventory.getAllProducts()) {
+                ObservableList<Part> allAssociatedParts = product.getAllAssociatedParts();
+                for (int i = 0; i < allAssociatedParts.size(); i++) {
+                    Part part = allAssociatedParts.get(i);
+                    if (part.getId() == id) {
+                        allAssociatedParts.set(i, new InHouse( id,  name,  price,  stock,  min,  max,  machineId));
+                    }
+                }
+            }
         } else {
             String companyName = machineIDCompanyNameTxt.getText();
             Inventory.updatePart(updateIndex, new Outsourced( id,  name,  price,  stock,  min,  max, companyName));
+            for (Product product : Inventory.getAllProducts()) {
+                ObservableList<Part> allAssociatedParts = product.getAllAssociatedParts();
+                for (int i = 0; i < allAssociatedParts.size(); i++) {
+                    Part part = allAssociatedParts.get(i);
+                    if (part.getId() == id) {
+                        allAssociatedParts.set(i, new Outsourced( id,  name,  price,  stock,  min,  max,  companyName));
+                    }
+                }
+            }
         }
 
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
@@ -105,9 +117,9 @@ public class ModifyPartsController implements Initializable {
     }
 
     public void sendPart(Part part) {
-        idText.setText(String.valueOf(part.getId()));
+        idTxt.setText(String.valueOf(part.getId()));
         nameTxt.setText(part.getName());
-        invText.setText(String.valueOf(part.getStock()));
+        invTxt.setText(String.valueOf(part.getStock()));
         priceCostTxt.setText(String.valueOf(part.getPrice()));
         maxTxt.setText(String.valueOf(part.getMax()));
         minTxt.setText(String.valueOf(part.getMin()));
@@ -121,6 +133,16 @@ public class ModifyPartsController implements Initializable {
             machineIDCompanyNameTxt.setText(((Outsourced) part).getCompanyName());
             outsourcedRBtn.setSelected(true);
         }
+    }
+
+    @FXML
+    void onActionInHouse(ActionEvent event) {
+        lblIDCompanyName.setText("Machine ID");
+    }
+
+    @FXML
+    void onActionOutsourced(ActionEvent event) {
+        lblIDCompanyName.setText("Company Name");
     }
 
     @Override
