@@ -7,10 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.*;
 
@@ -67,52 +64,69 @@ public class ModifyPartsController implements Initializable {
     @FXML
     void onActionSave(ActionEvent event) throws IOException {
 
-        ObservableList<Part> partList = Inventory.getAllParts();
+        try {
+            ObservableList<Part> partList = Inventory.getAllParts();
 
-        int id = Integer.parseInt(idTxt.getText());
-        String name = nameTxt.getText();
-        int stock = Integer.parseInt(invTxt.getText());
-        double price = Double.parseDouble(priceCostTxt.getText());
-        int min = Integer.parseInt(minTxt.getText());
-        int max = Integer.parseInt(maxTxt.getText());
+            int id = Integer.parseInt(idTxt.getText());
+            String name = nameTxt.getText();
+            int stock = Integer.parseInt(invTxt.getText());
+            double price = Double.parseDouble(priceCostTxt.getText());
+            int min = Integer.parseInt(minTxt.getText());
+            int max = Integer.parseInt(maxTxt.getText());
 
-        int updateIndex = -1;
-        for (int i = 0; i < partList.size(); i++) {
-            if (partList.get(i).getId() == id) {
-                updateIndex = i;
+            if (stock > max || stock < min) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setContentText("Minimum should be less than or equal to maximum, " +
+                        "and inventory stock should be between them.");
+                alert.showAndWait();
+                return;
             }
-        }
 
-        if (inHouseRBtn.isSelected()) {
-            int machineId = Integer.parseInt(machineIDCompanyNameTxt.getText());
-            Inventory.updatePart(updateIndex, new InHouse( id,  name,  price,  stock,  min,  max,  machineId));
-            for (Product product : Inventory.getAllProducts()) {
-                ObservableList<Part> allAssociatedParts = product.getAllAssociatedParts();
-                for (int i = 0; i < allAssociatedParts.size(); i++) {
-                    Part part = allAssociatedParts.get(i);
-                    if (part.getId() == id) {
-                        allAssociatedParts.set(i, new InHouse( id,  name,  price,  stock,  min,  max,  machineId));
+            int updateIndex = -1;
+            for (int i = 0; i < partList.size(); i++) {
+                if (partList.get(i).getId() == id) {
+                    updateIndex = i;
+                }
+            }
+
+            if (inHouseRBtn.isSelected()) {
+                int machineId = Integer.parseInt(machineIDCompanyNameTxt.getText());
+                Inventory.updatePart(updateIndex, new InHouse( id,  name,  price,  stock,  min,  max,  machineId));
+                for (Product product : Inventory.getAllProducts()) {
+                    ObservableList<Part> allAssociatedParts = product.getAllAssociatedParts();
+                    for (int i = 0; i < allAssociatedParts.size(); i++) {
+                        Part part = allAssociatedParts.get(i);
+                        if (part.getId() == id) {
+                            allAssociatedParts.set(i, new InHouse( id,  name,  price,  stock,  min,  max,  machineId));
+                        }
+                    }
+                }
+            } else {
+                String companyName = machineIDCompanyNameTxt.getText();
+                Inventory.updatePart(updateIndex, new Outsourced( id,  name,  price,  stock,  min,  max, companyName));
+                for (Product product : Inventory.getAllProducts()) {
+                    ObservableList<Part> allAssociatedParts = product.getAllAssociatedParts();
+                    for (int i = 0; i < allAssociatedParts.size(); i++) {
+                        Part part = allAssociatedParts.get(i);
+                        if (part.getId() == id) {
+                            allAssociatedParts.set(i, new Outsourced( id,  name,  price,  stock,  min,  max,  companyName));
+                        }
                     }
                 }
             }
-        } else {
-            String companyName = machineIDCompanyNameTxt.getText();
-            Inventory.updatePart(updateIndex, new Outsourced( id,  name,  price,  stock,  min,  max, companyName));
-            for (Product product : Inventory.getAllProducts()) {
-                ObservableList<Part> allAssociatedParts = product.getAllAssociatedParts();
-                for (int i = 0; i < allAssociatedParts.size(); i++) {
-                    Part part = allAssociatedParts.get(i);
-                    if (part.getId() == id) {
-                        allAssociatedParts.set(i, new Outsourced( id,  name,  price,  stock,  min,  max,  companyName));
-                    }
-                }
-            }
+
+            stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
+            scene = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/MainMenu.fxml")));
+            stage.setScene(new Scene(scene));
+            stage.show();
+        }
+        catch(NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Please enter the appropriate form of data.");
+            alert.showAndWait();
         }
 
-        stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/MainMenu.fxml")));
-        stage.setScene(new Scene(scene));
-        stage.show();
+
 
     }
 

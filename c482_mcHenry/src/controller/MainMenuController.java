@@ -8,10 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import main.Main;
@@ -21,6 +18,8 @@ import model.Product;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainMenuController implements Initializable {
@@ -71,7 +70,7 @@ public class MainMenuController implements Initializable {
     void onActionAddParts(ActionEvent event) throws IOException {
 
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/view/AddParts.fxml"));
+        scene = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/AddParts.fxml")));
         stage.setScene(new Scene(scene));
         stage.show();
 
@@ -81,7 +80,7 @@ public class MainMenuController implements Initializable {
     void onActionAddProducts(ActionEvent event) throws IOException {
 
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/view/AddProducts.fxml"));
+        scene = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/AddProducts.fxml")));
         stage.setScene(new Scene(scene));
         stage.show();
 
@@ -90,16 +89,36 @@ public class MainMenuController implements Initializable {
     @FXML
     void onActionDeleteParts(ActionEvent event) {
         if (!partsTableView.getSelectionModel().isEmpty()) {
-            Inventory.getAllParts().remove(partsTableView.getSelectionModel().getSelectedItem());
-            partsTableView.setItems(Inventory.getAllParts());
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setContentText("Do you want to delete the part?");
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                Inventory.getAllParts().remove(partsTableView.getSelectionModel().getSelectedItem());
+                partsTableView.setItems(Inventory.getAllParts());
+            }
         }
     }
 
     @FXML
     void onActionDeleteProducts(ActionEvent event) {
         if (!productsTableView.getSelectionModel().isEmpty()) {
-            Inventory.getAllProducts().remove(productsTableView.getSelectionModel().getSelectedItem());
-            productsTableView.setItems(Inventory.getAllProducts());
+            if (!productsTableView.getSelectionModel().getSelectedItem().getAllAssociatedParts().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setContentText("Please remove associated parts before attempting to delete the product.");
+                alert.showAndWait();
+                return;
+            }
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setContentText("Do you want to delete the product?");
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                Inventory.getAllProducts().remove(productsTableView.getSelectionModel().getSelectedItem());
+                productsTableView.setItems(Inventory.getAllProducts());
+            }
+
         }
     }
 

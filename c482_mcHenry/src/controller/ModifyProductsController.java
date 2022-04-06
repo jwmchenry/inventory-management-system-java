@@ -8,10 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import main.Main;
@@ -23,6 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ListIterator;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ModifyProductsController implements Initializable {
@@ -119,40 +117,59 @@ public class ModifyProductsController implements Initializable {
         if (assocPartsTableView.getSelectionModel().isEmpty()) {
             return;
         }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("Do you want dissociate the part?");
+        Optional<ButtonType> result = alert.showAndWait();
 
-        tempAssocParts.removeIf(part -> part.getId() ==
-                assocPartsTableView.getSelectionModel().getSelectedItem().getId());
-
-        assocPartsTableView.setItems(tempAssocParts);
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            tempAssocParts.removeIf(part -> part.getId() ==
+                    assocPartsTableView.getSelectionModel().getSelectedItem().getId());
+            assocPartsTableView.setItems(tempAssocParts);
+        }
     }
 
     @FXML
     void onActionSave(ActionEvent event) throws IOException {
+        try {
+            int id = Integer.parseInt(idTxt.getText());
+            String name = nameTxt.getText();
+            double price = Double.parseDouble(priceTxt.getText());
+            int stock = Integer.parseInt(invTxt.getText());
+            int max = Integer.parseInt(maxTxt.getText());
+            int min = Integer.parseInt(minTxt.getText());
 
-        int id = Integer.parseInt(idTxt.getText());
-        String name = nameTxt.getText();
-        double price = Double.parseDouble(priceTxt.getText());
-        int stock = Integer.parseInt(invTxt.getText());
-        int max = Integer.parseInt(maxTxt.getText());
-        int min = Integer.parseInt(minTxt.getText());
-
-        int updateIndex = -1;
-        for (int i = 0; i < Inventory.getAllProducts().size(); i++) {
-            if (id == Inventory.getAllProducts().get(i).getId()) {
-                updateIndex = i;
+            if (stock > max || stock < min) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setContentText("Minimum should be less than or equal to maximum, " +
+                        "and inventory stock should be between them.");
+                alert.showAndWait();
+                return;
             }
+
+            int updateIndex = -1;
+            for (int i = 0; i < Inventory.getAllProducts().size(); i++) {
+                if (id == Inventory.getAllProducts().get(i).getId()) {
+                    updateIndex = i;
+                }
+            }
+
+            Inventory.updateProduct(updateIndex, new Product(id, name, price, stock, max, min));
+
+            for (Part part : tempAssocParts) {
+                Inventory.getAllProducts().get(updateIndex).addAssociatedPart(part);
+            }
+
+            stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
+            scene = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/MainMenu.fxml")));
+            stage.setScene(new Scene(scene));
+            stage.show();
+        }
+        catch(NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Please enter the appropriate form of data.");
+            alert.showAndWait();
         }
 
-        Inventory.updateProduct(updateIndex, new Product(id, name, price, stock, max, min));
-
-        for (Part part : tempAssocParts) {
-            Inventory.getAllProducts().get(updateIndex).addAssociatedPart(part);
-        }
-
-        stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/MainMenu.fxml")));
-        stage.setScene(new Scene(scene));
-        stage.show();
     }
 
     @FXML

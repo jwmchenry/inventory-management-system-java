@@ -6,10 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import main.Main;
 import model.InHouse;
@@ -18,15 +15,13 @@ import model.Outsourced;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class AddPartsController implements Initializable {
 
     Stage stage;
     Parent scene;
-
-    @FXML
-    private TextField idText;
 
     @FXML
     private RadioButton inHouseRBtn;
@@ -50,16 +45,13 @@ public class AddPartsController implements Initializable {
     private TextField nameTxt;
 
     @FXML
-    private RadioButton outsourcedRBtn;
-
-    @FXML
     private TextField pricePerCostTxt;
 
     @FXML
     void onActionCancel(ActionEvent event) throws IOException {
 
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/view/MainMenu.fxml"));
+        scene = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/MainMenu.fxml")));
         stage.setScene(new Scene(scene));
         stage.show();
 
@@ -68,28 +60,42 @@ public class AddPartsController implements Initializable {
     @FXML
     void onActionSave(ActionEvent event) throws IOException {
 
-        int id = Main.uniqueIdCounter;
-        Main.uniqueIdCounter++;
+        try {
+            int id = Main.uniqueIdCounter;
+            Main.uniqueIdCounter++;
 
-        String name = nameTxt.getText();
-        int stock = Integer.parseInt(invTxt.getText());
-        double price = Double.parseDouble(pricePerCostTxt.getText());
-        int min = Integer.parseInt(minTxt.getText());
-        int max = Integer.parseInt(maxTxt.getText());
+            String name = nameTxt.getText();
+            int stock = Integer.parseInt(invTxt.getText());
+            double price = Double.parseDouble(pricePerCostTxt.getText());
+            int min = Integer.parseInt(minTxt.getText());
+            int max = Integer.parseInt(maxTxt.getText());
 
-        if (inHouseRBtn.isSelected()) {
-            int machineId = Integer.parseInt(machineIdCompanyNameTxt.getText());
-            Inventory.addPart(new InHouse( id,  name,  price,  stock,  min,  max,  machineId));
-        } else {
-            String companyName = machineIdCompanyNameTxt.getText();
-            Inventory.addPart( new Outsourced( id,  name,  price,  stock,  min,  max, companyName));
+            if (stock > max || stock < min) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setContentText("Minimum should be less than or equal to maximum, " +
+                        "and inventory stock should be between them.");
+                alert.showAndWait();
+                return;
+            }
+
+            if (inHouseRBtn.isSelected()) {
+                int machineId = Integer.parseInt(machineIdCompanyNameTxt.getText());
+                Inventory.addPart(new InHouse( id,  name,  price,  stock,  min,  max,  machineId));
+            } else {
+                String companyName = machineIdCompanyNameTxt.getText();
+                Inventory.addPart( new Outsourced( id,  name,  price,  stock,  min,  max, companyName));
+            }
+
+            stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
+            scene = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/MainMenu.fxml")));
+            stage.setScene(new Scene(scene));
+            stage.show();
         }
-
-        stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/view/MainMenu.fxml"));
-        stage.setScene(new Scene(scene));
-        stage.show();
-
+        catch(NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Please enter the appropriate form of data.");
+            alert.showAndWait();
+        }
     }
 
     @FXML

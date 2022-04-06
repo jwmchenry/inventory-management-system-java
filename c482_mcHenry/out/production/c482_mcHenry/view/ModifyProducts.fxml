@@ -15,7 +15,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ModifyProductsController">
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.ModifyProductsController">
    <children>
       <SplitPane dividerPositions="0.5" prefHeight="600.0" prefWidth="1000.0">
         <items>
@@ -87,7 +88,8 @@
                   <Button layoutX="388.0" layoutY="537.0" mnemonicParsing="false" onAction="#onActionCancel" text="Cancel" />
                   <Button layoutX="303.0" layoutY="537.0" mnemonicParsing="false" onAction="#onActionSave" text="Save" />
                   <Button layoutX="303.0" layoutY="504.0" mnemonicParsing="false" onAction="#onActionRemoveAssociatedPart" text="Remove Associated Part" />
-                  <TextField layoutX="279.0" layoutY="29.0" prefHeight="25.0" prefWidth="161.0" promptText="Search by Part ID or Name" />
+                  <TextField fx:id="searchPartsTxt" layoutX="228.0" layoutY="29.0" prefHeight="25.0" prefWidth="161.0" promptText="Search by Part ID or Name" />
+                  <Button layoutX="389.0" layoutY="29.0" mnemonicParsing="false" onAction="#onActionSearchParts" text="Search" />
                </children>
             </AnchorPane>
         </items>

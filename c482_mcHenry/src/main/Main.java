@@ -9,6 +9,7 @@ import model.InHouse;
 import model.Inventory;
 import model.Product;
 
+import java.util.Objects;
 
 
 public class Main extends Application {
@@ -17,7 +18,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/view/MainMenu.fxml"));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/MainMenu.fxml")));
         stage.setTitle("First Screen");
         stage.setScene(new Scene(root, 1000, 400));
         stage.show();
