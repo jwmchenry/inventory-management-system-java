@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/** This is the controller class for the AddProducts fxml document.*/
 public class AddProductsController implements Initializable {
 
     Stage stage;
@@ -60,9 +61,6 @@ public class AddProductsController implements Initializable {
     private TableView<Part> associatedPartsTableView;
 
     @FXML
-    private TextField idTxt;
-
-    @FXML
     private TextField invTxt;
 
     @FXML
@@ -80,6 +78,8 @@ public class AddProductsController implements Initializable {
     @FXML
     private TextField searchPartsTxt;
 
+    /** This method adds an associated part. On button click, the highlighted part is added to the associated parts
+     * list and tableview.*/
     @FXML
     void onActionAddAssociatedPart(ActionEvent event) {
         boolean partAdded = false;
@@ -98,6 +98,9 @@ public class AddProductsController implements Initializable {
 
     }
 
+    /**This method returns to main menu. On button click the program will move from the Add
+     Products window back to the main menu without saving.
+     @param event This parameter is used to get the window where the button click is occurring.*/
     @FXML
     void onActionCancel(ActionEvent event) throws IOException {
 
@@ -108,12 +111,8 @@ public class AddProductsController implements Initializable {
 
     }
 
-    //Here I ran into a runtime error where I tried to modify tempAssocParts while it was being iterated over.
-    //To fix it, I created a clone of the list and iterated over the clone and removed the item from the
-    //actual list. However, my initial effort at creating a clone failed because I just used the assignment
-    //operator which caused the "clone" to point back to the original contents. Instead, I created a new
-    //object and filled it with the contents of the original list.
-
+    /** This method removes an associated part. On button click, the highlighted part is removed from the associated
+     *  part list and tableview.*/
     @FXML
     void onActionRemoveAssociatedPart(ActionEvent event) {
 
@@ -133,6 +132,9 @@ public class AddProductsController implements Initializable {
 
     }
 
+    /**This method adds a product. On button click the program will save the user input as a new product and
+     * return to the main menu.
+     * @param event This parameter is used to get the window where the button click is occurring.*/
     @FXML
     void onActionSave(ActionEvent event) throws IOException {
         try {
@@ -154,7 +156,7 @@ public class AddProductsController implements Initializable {
                 return;
             }
 
-            Inventory.getAllProducts().add(new Product(id, name, price, stock, max, min));
+            Inventory.addProduct(new Product(id, name, price, stock, max, min));
 
             for (Product product : Inventory.getAllProducts()) {
                 if (product.getId() == id) {
@@ -174,6 +176,8 @@ public class AddProductsController implements Initializable {
 
     }
 
+    /** This method searches through parts. On button click, the parts will be filtered by name which can include
+     *  partials, or by part ID.*/
     @FXML
     void onActionSearchParts(ActionEvent event) {
 
@@ -193,6 +197,8 @@ public class AddProductsController implements Initializable {
         }
     }
 
+    /** This method is run when the class is instantiated. Additionally, the tableview information is set and
+     * displayed here.*/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         tempAssocParts.clear();

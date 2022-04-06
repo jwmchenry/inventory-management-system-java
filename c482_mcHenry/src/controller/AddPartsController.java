@@ -18,6 +18,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+/** This is the controller class for the AddParts fxml document.*/
 public class AddPartsController implements Initializable {
 
     Stage stage;
@@ -47,6 +48,9 @@ public class AddPartsController implements Initializable {
     @FXML
     private TextField pricePerCostTxt;
 
+    /**This method returns to main menu. On button click the program will move from the Add
+     Parts window back to the main menu without saving.
+     @param event This parameter is used to get the window where the button click is occurring.*/
     @FXML
     void onActionCancel(ActionEvent event) throws IOException {
 
@@ -57,6 +61,9 @@ public class AddPartsController implements Initializable {
 
     }
 
+    /**This method adds a part. On button click the program will save the user input as a new part and
+     * return to the main menu.
+     * @param event This parameter is used to get the window where the button click is occurring.*/
     @FXML
     void onActionSave(ActionEvent event) throws IOException {
 
@@ -98,16 +105,19 @@ public class AddPartsController implements Initializable {
         }
     }
 
+    /** This method changes the label to say Machine ID.*/
     @FXML
     void onActionInHouse(ActionEvent event) {
         lblIdCompanyName.setText("Machine ID");
     }
 
+    /** This method changes the label to say Company Name.*/
     @FXML
     void onActionOutsourced(ActionEvent event) {
         lblIdCompanyName.setText("Company Name");
     }
 
+    /** This method is run when the class is instantiated.*/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 

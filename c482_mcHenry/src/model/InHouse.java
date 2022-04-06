@@ -1,5 +1,6 @@
 package model;
 
+/** This is a subclass for Parts. This class gets used when InHouse radio button is selected.*/
 public class InHouse extends Part{
 
     private int machineId;
@@ -9,10 +10,12 @@ public class InHouse extends Part{
         this.machineId = machineId;
     }
 
+    /** Getter for Machine ID.*/
     public int getMachineId() {
         return machineId;
     }
 
+    /** Setter for Machine ID.*/
     public void setMachineId(int machineId) {
         this.machineId = machineId;
     }

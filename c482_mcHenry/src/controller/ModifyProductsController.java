@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/** This class is the controller for the ModifyProducts fxml document.*/
 public class ModifyProductsController implements Initializable {
 
     Stage stage;
@@ -81,6 +82,8 @@ public class ModifyProductsController implements Initializable {
     @FXML
     private TextField searchPartsTxt;
 
+    /** This method adds an associated part. On button click, the selected associated part is added to the
+     * corresponding associated parts tableview.*/
     @FXML
     void onActionAddPart(ActionEvent event) {
         boolean partAdded = false;
@@ -98,9 +101,7 @@ public class ModifyProductsController implements Initializable {
         assocPartsTableView.setItems(tempAssocParts);
     }
 
-
-
-
+    /** This method returns to the Main Menu. On button click, return to the main menu without modifying the product.*/
     @FXML
     void onActionCancel(ActionEvent event) throws IOException {
 
@@ -111,6 +112,8 @@ public class ModifyProductsController implements Initializable {
 
     }
 
+    /** This method dissociates a part from a product. On button click, the part is removed from association with
+     *  the product.*/
     @FXML
     void onActionRemoveAssociatedPart(ActionEvent event) {
 
@@ -128,6 +131,8 @@ public class ModifyProductsController implements Initializable {
         }
     }
 
+    /** This method saves the modifications to the product. On button click, everything is saved assuming the correct
+     * data types were used in the fields. Returns to Main Menu.*/
     @FXML
     void onActionSave(ActionEvent event) throws IOException {
         try {
@@ -172,6 +177,8 @@ public class ModifyProductsController implements Initializable {
 
     }
 
+    /** This method searches for a part. On button click, the parts list is filtered to return a part or parts
+     * matching the search query.*/
     @FXML
     void onActionSearchParts(ActionEvent event) {
 
@@ -192,6 +199,7 @@ public class ModifyProductsController implements Initializable {
 
     }
 
+    /** This method sets the text fields to contain the information of the selected product.*/
     public void sendProduct(Product product) {
         idTxt.setText(String.valueOf(product.getId()));
         nameTxt.setText(product.getName());
@@ -203,6 +211,8 @@ public class ModifyProductsController implements Initializable {
         assocPartsTableView.setItems(product.getAllAssociatedParts());
     }
 
+    /** This method is run when the class is instantiated. Additionally, the tableview information is set and
+     * displayed here.*/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 

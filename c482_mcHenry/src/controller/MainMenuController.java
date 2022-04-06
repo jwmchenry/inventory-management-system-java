@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/** This class is the controller for the MainMenu fxml document.*/
 public class MainMenuController implements Initializable {
 
     Stage stage;
@@ -66,6 +67,8 @@ public class MainMenuController implements Initializable {
     @FXML
     private TextField searchProductsTxt;
 
+    /** This method switches to the Add Parts screen.
+     * @param event This parameter is used to get the window where the button click is occurring.*/
     @FXML
     void onActionAddParts(ActionEvent event) throws IOException {
 
@@ -76,6 +79,8 @@ public class MainMenuController implements Initializable {
 
     }
 
+    /** This method switches to the Add Products screen.
+     * @param event This parameter is used to get the window where the button click is occurring.*/
     @FXML
     void onActionAddProducts(ActionEvent event) throws IOException {
 
@@ -86,6 +91,7 @@ public class MainMenuController implements Initializable {
 
     }
 
+    /** This method deletes the selected part.*/
     @FXML
     void onActionDeleteParts(ActionEvent event) {
         if (!partsTableView.getSelectionModel().isEmpty()) {
@@ -94,12 +100,15 @@ public class MainMenuController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                Inventory.getAllParts().remove(partsTableView.getSelectionModel().getSelectedItem());
-                partsTableView.setItems(Inventory.getAllParts());
+                if (Inventory.deletePart(partsTableView.getSelectionModel().getSelectedItem())) {
+                    partsTableView.setItems(Inventory.getAllParts());
+                }
+
             }
         }
     }
 
+    /** This method deletes the selected product.*/
     @FXML
     void onActionDeleteProducts(ActionEvent event) {
         if (!productsTableView.getSelectionModel().isEmpty()) {
@@ -115,13 +124,15 @@ public class MainMenuController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                Inventory.getAllProducts().remove(productsTableView.getSelectionModel().getSelectedItem());
+                Inventory.deleteProduct(productsTableView.getSelectionModel().getSelectedItem());
                 productsTableView.setItems(Inventory.getAllProducts());
             }
 
         }
     }
 
+    /** This method switches to the Modify Parts screen.
+     * @param event This parameter is used to get the window where the button click is occurring.*/
     @FXML
     void onActionModifyParts(ActionEvent event) throws IOException {
 
@@ -144,6 +155,8 @@ public class MainMenuController implements Initializable {
 
     }
 
+    /** This method switches to the Modify Products screen.
+     * @param event This parameter is used to get the window where the button click is occurring.*/
     @FXML
     void onActionModifyProducts(ActionEvent event) throws IOException {
 
@@ -169,13 +182,14 @@ public class MainMenuController implements Initializable {
 
     }
 
+    /** This method closes the program.*/
     @FXML
     void onActionExit(ActionEvent event) {
         System.exit(0);
     }
 
 
-    //search function by part ID or part name
+    /** This method searches parts. On button click, the parts are filtered by name or ID.*/
     @FXML
     void onActionSearchParts(ActionEvent event) {
 
@@ -195,7 +209,7 @@ public class MainMenuController implements Initializable {
         }
     }
 
-    //search function for products by ID or name
+    /** This method searches products. On button click, the products are filtered by name or ID.*/
     @FXML
     void onActionSearchProducts(ActionEvent event) {
 
@@ -215,6 +229,8 @@ public class MainMenuController implements Initializable {
         }
     }
 
+    /** This method is run when the class is instantiated. Additionally, the tableview information is set and
+     * displayed here.*/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 

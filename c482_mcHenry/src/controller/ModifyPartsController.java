@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+/** This class is the controller for the ModifyParts fxml document.*/
 public class ModifyPartsController implements Initializable {
 
     Stage stage;
@@ -51,6 +52,9 @@ public class ModifyPartsController implements Initializable {
     @FXML
     private TextField priceCostTxt;
 
+    /** This method returns to main menu. On button click the program will move from the Modify Parts
+     *  window back to the main menu without saving.
+     @param event This parameter is used to get the window where the button click is occurring.*/
     @FXML
     void onActionCancel(ActionEvent event) throws IOException {
 
@@ -61,6 +65,9 @@ public class ModifyPartsController implements Initializable {
 
     }
 
+    /** This method saves the changes to a part. On button click the modifications to the data of a part are saved and
+     *  the user is returned to the Main Menu.
+     *  @param event This parameter is used to get the window where the button click is occurring.*/
     @FXML
     void onActionSave(ActionEvent event) throws IOException {
 
@@ -130,6 +137,9 @@ public class ModifyPartsController implements Initializable {
 
     }
 
+    /** This method gets part information to display. When method is called, the text boxes are filled with
+     * the corresponding data of the part that was selected.
+     * @param part This is the selected Part.*/
     public void sendPart(Part part) {
         idTxt.setText(String.valueOf(part.getId()));
         nameTxt.setText(part.getName());
@@ -149,16 +159,19 @@ public class ModifyPartsController implements Initializable {
         }
     }
 
+    /** This method sets the label to Machine ID.*/
     @FXML
     void onActionInHouse(ActionEvent event) {
         lblIDCompanyName.setText("Machine ID");
     }
 
+    /** This method sets the label to Company Name.*/
     @FXML
     void onActionOutsourced(ActionEvent event) {
         lblIDCompanyName.setText("Company Name");
     }
 
+    /** This method is run when the class is instantiated.*/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
