@@ -22,7 +22,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-/** This class is the controller for the MainMenu fxml document.*/
+/** This class is the controller for the MainMenu fxml document.
+ * FUTURE ENHANCEMENT - Visual information is lacking in this inventory management system, so I propose a future
+ * enhancement could be to implement the functionality to display images associated with the parts and products. This
+ * could help bridge the gap between hands-on part knowledge and usage of the system, allowing for individuals
+ * less familiar with the part names and IDs to identify objects by sight.*/
 public class MainMenuController implements Initializable {
 
     Stage stage;
